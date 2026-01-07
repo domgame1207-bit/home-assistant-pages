@@ -1,9 +1,9 @@
-name: Deploy to Cloudflare Pages
+name: Deploy Alexa Worker
 
 on:
   push:
     branches:
-      - main  # Or the branch you want to deploy from
+      - main  # deploy from main branch
 
 jobs:
   deploy:
@@ -12,20 +12,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Cloudflare CLI
-        run: |
-          curl -L https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64 -o cloudflared
-          chmod +x cloudflared
-          sudo mv cloudflared /usr/local/bin/
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
 
-      - name: Authenticate with Cloudflare
+      - name: Install Wrangler
+        run: npm install -g wrangler
+
+      - name: Deploy Worker
         env:
           CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-        run: cloudflared login --token $CF_API_TOKEN
-
-      - name: Deploy to Cloudflare Pages
-        env:
-          CF_API_TOKEN: ${{ secrets.CF_API_TOKEN }}
-          CF_ACCOUNT_ID: ${{ secrets.CF_ACCOUNT_ID }}
         run: npx wrangler deploy worker.js
-          cloudflared pages publish . --project-name dominick1208.workers.dev --branch main
