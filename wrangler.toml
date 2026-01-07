@@ -1,0 +1,5 @@
+name = "ha-alexa-worker"
+type = "javascript"   # simple JS worker
+account_id = "0b2d77a818c77be33531b172c0fc0a7e"
+workers_dev = true
+compatibility_date = "2026-01-07"
